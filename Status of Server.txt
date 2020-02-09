@@ -1,0 +1,31 @@
+1. Jenkins server
+		In /home/ec2-user/
+Systemctl status Jenkins
+Systemctl start Jenkins
+Systemctl stop Jenkins
+			Or
+$ sudo /etc/init.d/jenkins status
+$ sudo /etc/init.d/jenkins start
+$ sudo /etc/init.d/jenkins stop
+
+2. Docker server	
+		In /home/ec2-user/
+Systemctl status docker
+Systemctl start Jenkins
+
+3. Sonarqube
+	In non-root
+/opt/sonarqube-7.6/bin/linux-x86-64
+./sonar.sh status
+./sonar.sh start
+./sonar.sh stop
+
+4. Tomcat
+In root
+/opt/apache-tomcat-9.0.30/bin
+Sh startup.sh
+Sh startdown.sh
+
+
+
+

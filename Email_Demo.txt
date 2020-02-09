@@ -1,0 +1,24 @@
+pipeline 
+{
+  agent any
+    stages 
+    {
+      stage('Getting Code From SCM --> GitHub')
+      {
+        steps {
+		              git 'https://github.com/adil1806/mvn_sonar.git'
+              }
+      }
+      stage('Building a WAR File')
+      {
+        steps {
+              sh '/opt/maven/bin/mvn clean package'
+              }
+      }
+	  stage('Sending Email'){
+	  steps{
+	  emailext body: 'Testing !!!!', subject: 'Starting Build of Maven Project', to: 'khannadill40@gmail.com'
+	  }
+	  }
+    }
+}

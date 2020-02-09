@@ -1,0 +1,21 @@
+node{
+	stage('SCM Checkout'){
+	git 'https://github.com/adil1806/mvn_sonar.git'
+	}
+	stage('Maven Package'){
+	sh '/opt/maven/bin/mvn clean package'
+	}
+	stage('Docker Build Image'){
+	sh 'docker build -t mak1806/my-app:1.0 .'
+	}
+	stage('Push Docker Image on Docker Hub'){
+	withCredentials([string(credentialsId: 'Docker-pwd', variable: 'DockerHub')]) {
+        sh "docker login -u mak1806 -p ${DockerHub}"
+	    }
+	    sh 'docker push mak1806/my-app:1.0'
+	}
+	stage('Run Container on Docker Server'){
+	sh 'docker run -p 8085:8080 -d --name my-app mak1806/my-app:1.0'
+	}
+
+}

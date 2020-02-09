@@ -1,0 +1,41 @@
+CLIToken --> 11a784ac88e51872c26f7a8c0f8b1a5c1c
+
+
+java -jar jenkins-cli.jar -auth admin:admin -s http://3.6.82.62:8080/ help
+
+java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://3.6.82.62:8080/ help
+
+java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://3.6.82.62:8080/ version
+
+java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://3.6.82.62:8080/ list-jobs
+
+java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://3.6.82.62:8080/ build <job_name>
+
+java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://3.6.82.62:8080/ console <job_name>
+
+
+ java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://3.6.82.62:8080/ delete-builds Ing2 '2-3'
+
+
+ java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://3.6.82.62:8080/ delete-builds Ing2 '1'
+
+ java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://3.6.82.62:8080/ set-build-display-name SlaveDemo<this_isjob_name> 1<this_is_build_no> WithoutSlaveNode-   <this is build name>
+
+
+this one will offline the slave node
+java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://3.6.82.62:8080/ offline-node SlaveNode_Demo ...
+
+
+this one will online slave node
+java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://3.6.82.62:8080/ online-node SlaveNode_Demo ...
+
+to list the plugins
+java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://3.6.82.62:8080/ list-plugins
+
+To list specific plugin
+java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://3.6.82.62:8080/ list-plugins jdk-tool
+
+
+
+
+java -jar jenkins-cli.jar -auth admin:11a784ac88e51872c26f7a8c0f8b1a5c1c -s http://52.66.46.91:8080/ list-jobs

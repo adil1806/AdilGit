@@ -1,0 +1,105 @@
+UI can be either React JS / Angular Technologies
+
+React/Angular scripts build would be created in  /var/lib/jenkins/workspace/{Job_name}
+NodeJS / NPM - Installation for UI Job using React/Angular 
+---------------------------------------------------------
+cd /opt
+yum install -y gcc-c++ make
+yum install nodejs -y
+npm install yarn -g
+
+node --version
+npm --version
+
+npm install -g @angular/cli             ---- Enable Angular application
+
+vi /etc/environment
+export NODE_HOME=/usr/bin/node
+export PATH=${NODE_HOME}/bin:${PATH}
+
+Jenkins Configuration
+---------------------------
+Download NodeJS plugin
+
+Configure Node Js (Global tool configuration)
+-------------------------------------------
+NODEJS
+/usr/bin/node
+
+
+Angular 5 or higher version (read the below)
+----------------------------                                                    ------------------------------
+http://www.thejavageek.com/2018/01/04/deploying-angular-app-tomcat/
+
+Sample UI
+-----------
+UI - Declarative Scripting (React Js)
+
+pipeline {
+   agent any
+	stages {
+      stage('SCM Checkout') {
+         steps {
+            git 'https://github.com/awsasif8/Trading-UI.git'
+		}
+	}
+	stage('Build') {
+		steps {
+			sh '''
+			npm install
+			npm run build
+			npm audit fix
+			'''
+		}
+	}
+	stage ('Deploy') {
+		steps {
+			sh '''
+             cp -r $WORKSPACE/build /opt/apache-tomcat-9.0.30/webapps
+             curl -u admin:admin http://172.31.43.239:8888/manager/reload?path=/build 
+             '''
+		}
+	}
+}
+}
+
+---
+Notes:
+--------------------
+Launch the tomcat server and click on build folder to see the build application after the UI Job Completion
+http://172.31.43.239:8888/manager/reload?path=/build - IP address denotes Private IP of EC2 - This command reloads/refreshes the build and deployes into
+                                                       into Tomcat Server - /build folder.
+
+
+-------------------------------------
+UI - Declarative Scripting (Angular)
+-------------------------------------
+
+pipeline {
+   agent any
+	stages {
+      stage('SCM Checkout') {
+         steps {
+            git 'https://github.com/kurukundaveera/Kalyanam-UI.git'
+		}
+	}
+	stage('Build') {
+		steps {
+			sh '''
+			npm install
+			ng build --base-href=/matrimony/                      
+			'''
+		}
+	}
+	stage ('Deploy') {
+		steps {
+			sh '''
+             cp -r $WORKSPACE/dist/matrimony /opt/apache-tomcat-9.0.30/webapps
+             curl -u admin:admin http://172.31.43.239:8888/manager/reload?path=/build 
+             '''
+		}
+	}
+}
+}
+
+(Note: Here matrimony is the context path that we can find in application.properties)

@@ -1,0 +1,47 @@
+pipeline 
+{
+  agent any
+    stages 
+    {
+      stage('Getting Code From SCM --> GitHub')
+      {
+        steps {
+              git 'https://github.com/adil1806/hello-world-war.git'
+              }
+      }
+     stage("SonarQube Analysis") 
+     {
+         steps {
+              withSonarQubeEnv('sonar') {
+                sh '/opt/maven/bin/mvn clean package sonar:sonar'
+              }
+            }
+          }
+      stage("Quality Gate Either Pass or Fail") 
+      {
+          steps {
+              timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: true
+              }
+            }
+          }
+      stage('Building a WAR File')
+      {
+        steps {
+              sh '/opt/maven/bin/mvn clean package'
+              }
+      }
+      stage('Deploy To Nexus')
+      {
+        steps {
+              sh '/opt/maven/bin/mvn deploy'
+              }
+      }
+      stage('Deploy To TOMCAT')
+      {
+        steps {
+              deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'http://3.6.161.23:8888')], contextPath: 'CICD-App', war: '**/*.war'
+              }
+      }
+    }
+}

@@ -1,0 +1,13 @@
+node{
+		stage('Getting Code From SCM --> GitHub')
+      {
+              git 'https://github.com/adil1806/mvn_sonar.git'
+      }
+	  stage('Building a WAR File')
+      {
+              sh '/opt/maven/bin/mvn clean package'
+      }
+	  stage('Sending Email'){
+	  emailext body: 'Testing !!!!', subject: 'Starting Build of Maven Project', to: 'khannadill40@gmail.com'
+	  }
+}

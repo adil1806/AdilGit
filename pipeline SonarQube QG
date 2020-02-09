@@ -1,0 +1,35 @@
+pipeline {
+  agent any
+    stages {
+      stage('Pull From SCM'){
+        steps{
+        git 'https://github.com/adil1806/hello-world-war.git'
+        }
+        }
+    
+       stage('Analysis'){
+        steps {
+            withSonarQubeEnv('sonar'){
+                sh '/opt/sonar-scanner-3.3.0.1492-linux/bin/sonar-scanner -Dsonar.host.url=http://13.235.248.69:9000 -Dsonar.projectKey=my:project -Dsonar.sources=.'
+            }
+        }
+        }
+         stage("Quality Gate") {
+            steps {
+              timeout(time: 1, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+              }
+            }
+          }
+           stage('Build'){
+        steps {
+       sh '/opt/maven/bin/mvn clean install'
+        }
+      }
+        stage('Deploy using TOMCAT'){
+        steps {
+        deploy adapters: [tomcat9(credentialsId: 'Tomcat', path: '', url: 'http://13.235.248.69:8888/')], contextPath: 'Hello - World', war: '**/*.war'
+        }
+        }
+    }
+}
