@@ -1,0 +1,30 @@
+pipeline{
+    
+    agent any
+    stages{
+        stage('Pull From gitHub'){
+            steps{
+            git 'https://github.com/adil1806/hello-world-war.git'
+        }
+        }
+        stage('Packaging'){
+            steps{
+            sh '/opt/maven/bin/mvn clean package'
+        }
+        }
+        stage('Building docker Container'){
+         steps{
+             sshPublisher(publishers: [sshPublisherDesc(configName: 'Docker', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''docker stop my-tomcat;
+docker rm -f my-tomcat;
+docker image rm -f my-tomcat;
+cd /opt/docker;
+docker build -t my-tomcat .''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '//opt//docker', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**/*.war')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false), sshPublisherDesc(configName: 'Docker', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'docker run -d --name my-tomcat -p 8090:8080 my-tomcat', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+         }   
+        }
+         stage('Slack Notification'){
+	  steps{
+	  slackSend baseUrl: 'https://hooks.slack.com/services/', channel: '#cicdpipeline', color: 'good', message: 'Docker Container is successfully created and running', teamDomain: 'jenkinslearner', tokenCredentialId: 'Slack'
+	  }
+	  }
+    }
+}
